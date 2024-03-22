@@ -1,0 +1,15 @@
+declare namespace API {
+
+<% list.forEach(function(item) { %>
+
+  // <%= item.comment %>
+  interface <%= item.nameUpper %>Params {
+    <%- fn(item.inputs) %>
+  }
+
+  interface <%= item.nameUpper %>Responses {
+    <%- fn(item.outputs) %>
+  }
+  
+  <% }) %>
+}

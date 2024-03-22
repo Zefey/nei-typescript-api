@@ -1,0 +1,11 @@
+import { request } from '@ykb/core'
+<% list.forEach(function(item, index) { %>
+// <%= item.comment %>
+export async function <%= item.nameLower %>(data:API.<%= item.nameUpper %>Params) {
+  const result = await request.<%= item.type %><API.<%= item.nameUpper %>Responses>(data, {
+    url: '<%= item.url %>',
+  })
+
+  return result
+}
+<% }) %>

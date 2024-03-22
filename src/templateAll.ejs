@@ -1,0 +1,17 @@
+
+import { request } from '@ykb/core'
+
+<% list.forEach(function(item, index) { %>
+// <%= item.comment %>
+export async function <%= item.nameLower %>(data:{
+  <%- fn(item.inputs) %>
+}) {
+  const result = await request.<%= item.type %><{
+    <%- fn(item.outputs) %>
+  }>(data, {
+    url: '<%= item.url %>',
+  })
+
+  return result
+}
+<% }) %>
