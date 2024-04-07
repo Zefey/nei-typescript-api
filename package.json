@@ -2,12 +2,14 @@
   "name": "nei-typescript-api",
   "version": "1.0.0",
   "description": "nei文档生成ts api",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "bin": {
-    "neiApi": "./src/index.js"
+    "neiApi": "./dist/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc & node ./dist/index",
+    "build": "tsc"
   },
   "author": "zefey",
   "license": "ISC",
@@ -20,5 +22,17 @@
     "fs-extra": "^10.1.0",
     "inquirer": "^8.0.0",
     "qs": "^6.12.0"
-  }
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.12.5",
+    "@types/qs": "^6.9.14",
+    "typescript": "^5.4.4"
+  },
+  "files": [
+    "dist/**/*.js",
+    "template/**/*.ejs"
+  ]
 }

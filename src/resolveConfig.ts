@@ -1,5 +1,5 @@
-const path = require("path");
-const { cosmiconfigSync } = require("cosmiconfig");
+import path from "path";
+import { cosmiconfigSync } from "cosmiconfig";
 
 const getCosmiconfig = () => {
   const explorer = cosmiconfigSync("neiApi", {
@@ -27,7 +27,7 @@ const getCosmiconfig = () => {
   });
 
   return explorer;
-}
+};
 
 const getCosmiconfigPrivate = () => {
   const explorer = cosmiconfigSync("neiApi", {
@@ -51,23 +51,19 @@ const getCosmiconfigPrivate = () => {
       }
       return result;
     },
-    searchPlaces: [".neiApi.json",".neiApi"],
+    searchPlaces: [".neiApi.json", ".neiApi"],
   });
 
   return explorer;
-}
+};
 
-const resolveConfig = () => {
-  const {search} = getCosmiconfig()
-  const {search: searchPrivate} = getCosmiconfigPrivate()
-  const result = search()
-  const resultPrivate = searchPrivate()
+export const resolveConfig = () => {
+  const { search } = getCosmiconfig();
+  const { search: searchPrivate } = getCosmiconfigPrivate();
+  const result = search();
+  const resultPrivate = searchPrivate();
   return {
-    ...result.config,
-    ...resultPrivate.config,
-  }
-}
-
-module.exports = {
-  resolveConfig
+    ...result?.config,
+    ...resultPrivate?.config,
+  };
 };

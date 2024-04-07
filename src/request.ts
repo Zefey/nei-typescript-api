@@ -1,11 +1,11 @@
-const qs = require("qs");
-const axios = require("axios");
-const { resolveConfig } = require("./resolveConfig");
+import qs from "qs";
+import axios from "axios";
+import { resolveConfig } from "./resolveConfig";
 
 const __config__ = resolveConfig();
 
 axios.defaults.timeout = 30000;
-const http = axios.create({
+export const http = axios.create({
   withCredentials: true,
   headers: {
     Cookie:
@@ -27,7 +27,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
   (config) => {
-    config.headers.Cookie = config.headers.Cookie || __config__.Cookie || ''
+    config.headers.Cookie = config.headers.Cookie || __config__.Cookie || "";
     return config;
   },
   (error) => {
@@ -37,15 +37,14 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   (response) => {
-    const cookies = response.headers['set-cookie']
+    const cookies = response.headers["set-cookie"];
     // console.log('set-cookies', cookies)
-    if(cookies && cookies.length){
-      __config__.Cookie = cookies.map(v => v.split(';')[0]).join(';')
+    if (cookies && cookies.length) {
+      __config__.Cookie = cookies.map((v) => v.split(";")[0]).join(";");
     }
-    let res = response.data;
+    // let res = response.data;
     // console.log(res);
-    // 提前判断
-    return res;
+    return response;
   },
   async (error) => {
     let response = error.response;
@@ -56,7 +55,7 @@ http.interceptors.response.use(
 /**
  * 登录
  */
-const login = async () => {
+export const login = async () => {
   // 登录
   console.log("登录中");
   const res = await http.post(
@@ -66,106 +65,80 @@ const login = async () => {
       password: __config__.password,
     }),
     {
-      headers:{
+      headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-      }
+      },
     }
   );
   // console.log('login ',res)
   console.log("登录成功");
-  
+
   return res;
 };
 /**
  * 获取项目组
  */
-const getProgroups = async () => {
-  const res = await http.get(
-    `${__config__.domain}/api/progroups`,
-  );
-  return res.result;
+export const getProgroups = async () => {
+  const res = await http.get(`${__config__.domain}/api/progroups`);
+  return res.data.result;
 };
 
 /**
  * 获取项目列表
  */
-const getProjects = async (pgid) => {
-  const res = await http.get(
-    `${__config__.domain}/api/progroups/${pgid}`,
-  );
-  return res.result.projects;
+export const getProjects = async (pgid: string | number) => {
+  const res = await http.get(`${__config__.domain}/api/progroups/${pgid}`);
+  return res.data.result.projects;
 };
 
 /**
  * 获取接口列表
  */
-const getInterfaces = async (pid) => {
-  const res = await http.get(
-    `${__config__.domain}/api/interfaces/?pid=${pid}`,
-  );
-  return res.result;
+export const getInterfaces = async (pid: string | number) => {
+  const res = await http.get(`${__config__.domain}/api/interfaces/?pid=${pid}`);
+  return res.data.result;
 };
 
 /**
  * 获取接口
  */
-const getInterface = async (id) => {
-  const res = await http.get(
-    `${__config__.domain}/api/interfaces/${id}`,
-  );
-  return res.result;
+export const getInterface = async (id: string | number) => {
+  const res = await http.get(`${__config__.domain}/api/interfaces/${id}`);
+  return res.data.result;
 };
 
 /**
  * 获取类型
  */
-const getDataTypes = async (pid) => {
-  const res = await http.get(
-    `${__config__.domain}/api/datatypes/?pid=${pid}`,
-  );
-  return res.result;
+export const getDataTypes = async (pid: string | number) => {
+  const res = await http.get(`${__config__.domain}/api/datatypes/?pid=${pid}`);
+  return res.data.result;
 };
 
 /**
  * 获取常量
  */
-const getConstraints = async (pid) => {
+export const getConstraints = async (pid: string | number) => {
   const res = await http.get(
-    `${__config__.domain}/api/constraints/?pid=${pid}`,
+    `${__config__.domain}/api/constraints/?pid=${pid}`
   );
-  return res.result;
+  return res.data.result;
 };
 
 /**
  * 获取整个project数据
  */
-const getProjectres = async (toolKey) => {
+export const getProjectres = async (toolKey: string | number) => {
   const res = await http.get(
-    `${__config__.domain}/api/projectres/?key=${toolKey}`,
+    `${__config__.domain}/api/projectres/?key=${toolKey}`
   );
-  return res.result;
+  return res.data.result;
 };
 
 /**
  * 获取常量
  */
-const logout = async () => {
-  const res = await http.get(
-    `${__config__.domain}/logout`,
-  );
-  return res.result;
-};
-
-
-module.exports = {
-  http,
-  login,
-  getProgroups,
-  getProjects,
-  getInterfaces,
-  getInterface,
-  getDataTypes,
-  getConstraints,
-  getProjectres,
-  logout
+export const logout = async () => {
+  const res = await http.get(`${__config__.domain}/logout`);
+  return res.data.result;
 };

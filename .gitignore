@@ -2,4 +2,6 @@ node_modules/
 
 services/
 
+dist/
+
 .neiApi.json
