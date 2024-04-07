@@ -62,8 +62,12 @@ export const resolveConfig = () => {
   const { search: searchPrivate } = getCosmiconfigPrivate();
   const result = search();
   const resultPrivate = searchPrivate();
-  return {
+  const config = {
     ...result?.config,
     ...resultPrivate?.config,
-  };
+  }
+  if(Object.keys(config).length===0){
+    throw new Error('config is empty');
+  }
+  return config;
 };

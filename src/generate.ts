@@ -55,7 +55,8 @@ const fn = (list: any) =>
     .join("\n");
 
 const generateFile = (interfaces: any) => {
-  const filename = `${interfaces[0].path.split("/")[1]}.ts`;
+  const pathArr = interfaces[0].path.split("/")
+  const filename = toLowerCamelCase(`${pathArr[pathArr.length-2]}.ts`);
 
   const list = interfaces.map((v: any) => {
     const pathArr = v.path.split("/");
@@ -68,7 +69,8 @@ const generateFile = (interfaces: any) => {
       url: v.path,
     };
   });
-  const ejsUrl = path.join(__dirname, "..", "template", "template.ejs");
+  const ejsFolder = __config__.ejs || path.join(__dirname, "..", "template")
+  const ejsUrl = path.join(ejsFolder, "template.ejs");
   const templateStr = fs.readFileSync(ejsUrl, {
     encoding: "utf-8",
   });
@@ -86,9 +88,9 @@ const generateFile = (interfaces: any) => {
 };
 
 const generateType = async (interfaces: any, type: any, distType: any) => {
-  const filename = `${interfaces[0].path.split("/")[1]}${
-    distType === "inner" ? "" : ".d"
-  }.ts`;
+  const pathArr = interfaces[0].path.split("/")
+  const suffix = distType === "inner" ? "" : ".d"
+  const filename = toLowerCamelCase(`${pathArr[pathArr.length-2]}${suffix}.ts`);
 
   const list = interfaces.map((v: any) => {
     const pathArr = v.path.split("/");
@@ -104,10 +106,9 @@ const generateType = async (interfaces: any, type: any, distType: any) => {
     };
   });
 
+  const ejsFolder = __config__.ejs || path.join(__dirname, "..", "template")
   const ejsUrl = path.join(
-    __dirname,
-    "..",
-    "template",
+    ejsFolder,
     distType === "inner" ? "templateAll.ejs" : "templateType.ejs"
   );
   const templateStr = fs.readFileSync(ejsUrl, { encoding: "utf-8" });
