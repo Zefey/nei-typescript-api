@@ -18,6 +18,8 @@ const formatType = (list: any, type: any) => {
     Boolean: "boolean",
     Guid: "string",
     Int: "number",
+    long: "number",
+    int: "number"
   };
   return list.map((v: any) => {
     let res = {};
