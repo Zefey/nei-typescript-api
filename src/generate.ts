@@ -50,7 +50,7 @@ const fn = (list: any) =>
   list
     .map(
       (v: any) =>
-        `${v.name}:${
+        `${v.name}${v.required === 0 ? '?':''}:${
           Array.isArray(v.typeName) ? `{${fn(v.typeName)}}[]` : v.typeName
         };`
     )
