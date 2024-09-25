@@ -1,6 +1,6 @@
 {
   "name": "nei-typescript-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "nei文档生成ts api",
   "main": "dist/index.js",
   "bin": {

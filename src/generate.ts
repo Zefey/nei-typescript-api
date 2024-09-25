@@ -31,13 +31,18 @@ const formatType = (list: any, type: any) => {
     } else {
       const find = type.find((t: any) => t.id === v.type);
       if (find) {
-        const isEnum = find.name.includes("Enum");
-        let enumStr = find.params
-          .map((vv: any) => `\'${vv.name}\'`)
-          .join(" | ");
+        const isEnum = (find.name ?? '').toLowerCase().includes("enum");
+        let tempType = ''
+        if(isEnum){
+          tempType = find.params
+            .map((vv: any) => `\'${vv.name || vv.defaultValue}\'`)
+            .join(" | ");
+          }else {
+            tempType = formatType(find.params, type)
+          }
         res = {
           ...v,
-          typeName: isEnum ? enumStr : formatType(find.params, type),
+          typeName:tempType,
         };
       }
     }
@@ -46,15 +51,16 @@ const formatType = (list: any, type: any) => {
 };
 
 // 递归
-const fn = (list: any) =>
-  list
-    .map(
-      (v: any) =>
-        `${v.name}${v.required === 0 ? '?':''}:${
-          Array.isArray(v.typeName) ? `{${fn(v.typeName)}}[]` : v.typeName
-        };`
-    )
-    .join("\n");
+const fn = (list: any) => {
+  const enter = list.length>0 ? '\n':''
+  const res = list.map(
+    (v: any) =>
+      `\t${v.name}${v.required === 0 ? '?':''}:${
+        Array.isArray(v.typeName) ? `{${fn(v.typeName)}}[]` : v.typeName
+      }; ${v.description ? `// ${v.description} ` : ''}`
+  ).join("\n")
+  return `${enter}${res}${enter}`
+};
 
 const generateFile = (interfaces: any) => {
   const pathArr = interfaces[0].path.split("/")
